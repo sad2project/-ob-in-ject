@@ -1,3 +1,4 @@
+[![(Ob/In)ject] (https://img.shields.io/badge/(Ob%2FIn)Ject-v0.1-1567B9.svg)](https://github.com/sad2project/-ob-in-ject)
 [![Kotlin](https://img.shields.io/badge/kotlin-1.0.0--beta--1038-blue.svg)](http://kotlinlang.org)
 
 # (Ob/In)ject
@@ -35,3 +36,8 @@ Assuming `Example2` now takes all three of the given arguments, the full line of
     
 ###Limits
 At this point, there is a limit of 10 for the number of arguments that can be passed in. I actually expect to make that limit more strict down the road (not decided, yet), since classes with many dependencies are generally too complex. It'll also make it easier to create the needed permutations of additional features down the road. 
+
+######Todo
+- list the different "injector" types
+- make and discuss the actual container
+- discuss lack of annotation support
