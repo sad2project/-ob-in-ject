@@ -20,12 +20,10 @@ class PerThreadFactory<T>(private val supplier: () -> T): Provider<T> {
     }
 }
 
-class Singleton<T> (private val supplier: () -> T): Provider<T> {
-    private var cache: T? = null;
+class Singleton<T> (supplier: () -> T): Provider<T> {
+    private val cache: T by lazy(supplier);
     override fun invoke(): T {
-        if(cache == null)
-            cache = supplier()
-        return cache!!
+        return cache
     }
 }
 
