@@ -1,18 +1,18 @@
 package progjake.obinject
 
-import java.util.*
+import java.util.WeakHashMap
 
 interface Provider<out T> {
-    operator fun invoke() :T
+    fun create() :T
 }
 
 class Factory<T> (private val supplier: () -> T): Provider<T> {
-    override fun invoke(): T = supplier()
+    override fun create(): T = supplier()
 }
 
 class PerThreadFactory<T>(private val supplier: () -> T): Provider<T> {
     private val threadSupplier: MutableMap<Thread, T> = WeakHashMap()
-    override fun invoke(): T {
+    override fun create(): T {
         val thisThread = Thread.currentThread()
         if(thisThread !in threadSupplier)
             threadSupplier[thisThread] = supplier()
@@ -22,7 +22,7 @@ class PerThreadFactory<T>(private val supplier: () -> T): Provider<T> {
 
 class Singleton<T> (supplier: () -> T): Provider<T> {
     private val cache: T by lazy(supplier);
-    override fun invoke(): T {
+    override fun create(): T {
         return cache
     }
 }
@@ -30,8 +30,8 @@ class Singleton<T> (supplier: () -> T): Provider<T> {
 class ThreadSafeSingleton<T> (private val supplier: () -> T): Provider<T> {
     private var current: Provider<T> = Factory{swapper()}
 
-    override fun invoke(): T {
-        return current()
+    override fun create(): T {
+        return current.create()
     }
 
     @Synchronized
@@ -39,12 +39,12 @@ class ThreadSafeSingleton<T> (private val supplier: () -> T): Provider<T> {
         if(current !is Returner<*>) {
             current = Returner(supplier())
         }
-        return current()
+        return current.create()
     }
 }
 
 class Returner<T> (private val value: T): Provider<T> {
-    override fun invoke(): T {
+    override fun create(): T {
         return value
     }
 }
